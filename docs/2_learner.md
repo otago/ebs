@@ -6,7 +6,7 @@ result is displayed to the user from the form.
 Note the quirks regarding the non standard slashes with EBS. The type is also set
 to UserDetails with the return data.
 
-[Image of the page in action](../images/example2.png)
+![Image of the page in action](../images/example2.png)
 
 ```
 <?php
