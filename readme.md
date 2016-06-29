@@ -44,7 +44,7 @@ Use a VPN or Firewall rules to secure data can only move between EBS and your we
 
 You can do this with agent designer in client allows SMS users to create SQL 
 queries that feed into JSON web services. There are plenty of out of the box SQL 
-queries which you can use such searching (see example 3). 
+queries which you can use such as searching (see example 3). 
 
 1. ![Access user management](images/ebs2.png) 
 
@@ -52,9 +52,9 @@ queries which you can use such searching (see example 3).
 
 See docs/ folder
 
- 1. Reading a service
- 2. Creating a learner
- 3. Creating an application - with a dynamic search
+ 1. [Reading a service](/blob/master/docs/1_reading.md)
+ 2. ]Creating a learner](/blob/master/docs/2_learner.md)
+ 3. [Creating an application](/blob/master/docs/3_application.md) - with a dynamic search
 
 
 
