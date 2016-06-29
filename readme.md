@@ -5,7 +5,7 @@ Student Management System via a web service. You can customise your own read onl
 web service, giving you full access to the student database. 
 
 
-[Tribal logo](images/tribal_logo.jpg)
+![Tribal logo](images/tribal_logo.jpg)
 
 # installation
 
