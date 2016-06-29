@@ -6,7 +6,7 @@ the creating the SilverStripe Objects for you.
 
 If it fails to connect, it will throw an exception.
 
-[Image of the page in action](../images/example1.png)
+![Image of the page in action](../images/example1.png)
 
 ```php
 
