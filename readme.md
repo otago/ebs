@@ -9,6 +9,8 @@ web service, giving you full access to the student database.
 
 # installation
 
+Use composer to install the module:
+
 ```composer require otago/ebs```
 
 Then create an EBS user:
