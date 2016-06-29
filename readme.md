@@ -7,7 +7,7 @@ web service, giving you full access to the student database.
 
 ![Tribal logo](images/tribal_logo.jpg)
 
-# installation
+# Installation
 
 Use composer to install the module:
 
