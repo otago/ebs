@@ -53,7 +53,7 @@ queries which you can use such as searching (see example 3).
 See docs/ folder
 
  1. [Reading a service](/blob/master/docs/1_reading.md)
- 2. ]Creating a learner](/blob/master/docs/2_learner.md)
+ 2. [Creating a learner](/blob/master/docs/2_learner.md)
  3. [Creating an application](/blob/master/docs/3_application.md) - with a dynamic search
 
 
