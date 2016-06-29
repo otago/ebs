@@ -2,7 +2,7 @@
 
 This extension allows a SilverStripe instance communicate with Tribals EBS4 
 Student Management System via a web service. You can customise your own read only 
-web service, giving you full access to the student database. 
+web service queries, giving you full access to the student database. 
 
 
 ![Tribal logo](images/tribal_logo.jpg)
