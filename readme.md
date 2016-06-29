@@ -14,8 +14,10 @@ web service, giving you full access to the student database.
 Then create an EBS user:
 
 1. Open 'EBS Central' (client)
-2. Access user management ![Access user management](images/ebs3.png)
-3. Create a new role ![Create a role with at least these permissions](images/ebs4.png)
+2. Access user management 
+![Access user management](images/ebs3.png)
+3. Create a new role
+![Create a role with at least these permissions](images/ebs4.png)
 
 If you do not have permission to do this, you may need to seek your SMS administrator.
 
