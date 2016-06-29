@@ -5,7 +5,7 @@ You'll need a valid PersonCode and CourseID. See 2_learner.md for the PersonCode
 It's likely your EBS instance has been modified and won't return valid UIOs for the 
 application dropdown, but is still worth looking at for an example on how to search for data.
 
-[Image of the page in action](../images/example3.png)
+![Image of the page in action](../images/example3.png)
 
 ```php
 
