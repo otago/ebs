@@ -52,8 +52,7 @@ See docs/ folder
 
  1. Reading a service
  2. Creating a learner
- 3. Creating an application - with a dynamic
-
+ 3. Creating an application - with a dynamic search
 
 
 
