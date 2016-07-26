@@ -6,6 +6,8 @@ web service queries, giving you full access to the student database.
 
 
 ![Tribal logo](images/tribal_logo.jpg)
+*Note: Otago Polytechnic maintains this module, Tribal is not affiliated with the maintenance of it.*
+
 
 # Installation
 
