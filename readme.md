@@ -6,21 +6,23 @@ web service queries, giving you full access to the student database.
 
 
 ![Tribal logo](images/tribal_logo.jpg)
-*Note: Otago Polytechnic maintains this module, Tribal is not affiliated with the maintenance of it.*
 
+###### Note: Otago Polytechnic maintains this module, Tribal is not affiliated with the maintenance of it.
 
 # Installation
 
 Use composer to install the module:
 
-```composer require otago/ebs```
+```
+$composer require otago/ebs
+```
 
 Then create an EBS user:
 
-1. Open 'EBS Central' (client)
-2. Access user management 
+### 1. Open 'EBS Central' (client)
+### 2. Access user management 
 ![Access user management](images/ebs3.png)
-3. Create a new role
+### 3. Create a new role
 ![Create a role with at least these permissions](images/ebs4.png)
 
 If you do not have permission to do this, you may need to seek your SMS administrator.
