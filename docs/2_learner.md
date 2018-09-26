@@ -11,6 +11,8 @@ to UserDetails with the return data.
 ```
 <?php
 
+use OP\EBSWebservice;
+
 class LearnerPage extends Page {
 
 }

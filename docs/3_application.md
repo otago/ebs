@@ -11,6 +11,8 @@ application dropdown, but is still worth looking at for an example on how to sea
 
 <?php
 
+use OP\EBSWebservice;
+
 class ApplicationPage extends Page {
 	
 }

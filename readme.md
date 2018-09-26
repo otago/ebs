@@ -27,13 +27,13 @@ Then create an EBS user:
 
 If you do not have permission to do this, you may need to seek your SMS administrator.
 
-After create a **mysite/_config/ebs.yml** file with your EBS web service user details in it:
+After create a **app/_config/ebs.yml** file with your EBS web service user details in it:
 
 ```php
 ---
 Name: EBSWebservice
 ---
-EBSWebservice:
+OP\EBSWebservice:
     authentication:
         username: webservicename
         password: webservicepassword

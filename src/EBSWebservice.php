@@ -1,9 +1,19 @@
 <?php
 
+namespace OP;
+
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Dev\Debug;
+
 /**
  * EBS webservice object used to interface with your Student Management System
  */
 class EBSWebservice {
+
+	use Configurable;
+	use Injectable;
 
 	private static $instance;   // static ebs connection instance
 	private static $token; // JSON authentication token
@@ -21,12 +31,11 @@ class EBSWebservice {
 			return EBSWebservice::$instance;
 		}
 
-		$authentication = Config::inst()->get('EBSWebservice', 'authentication');
-
+		$authentication = self::config()->get('authentication');
 		if (!isset($authentication['username']) || !isset($authentication['password'])) {
 			user_error('EBS EBSWebservice authentication not set in .yml file');
 		}
-		
+
 		// get a cache key made in the last 30 minutes
 		$ebscache = EBSWebserviceCache::get()
 				->filter(array(
@@ -95,7 +104,7 @@ class EBSWebservice {
 	 * @return type string
 	 */
 	public static function getURL() {
-		$urltype = Config::inst()->get('EBSWebservice', 'authentication');
+		$urltype = self::config()->get('authentication');
 		if (Director::isTest()) {
 			return $urltype['locationTest'];
 		} else if (Director::isDev()) {

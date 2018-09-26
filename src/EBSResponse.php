@@ -1,9 +1,14 @@
 <?php
 
+namespace OP;
+
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ArrayList;
+
 /**
  * Class used to respond with JSON requests. Supports debugging.
  */
-class EBSResponse extends Object {
+class EBSResponse {
 
 	private $code;
 	private $content;

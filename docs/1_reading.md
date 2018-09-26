@@ -12,6 +12,8 @@ If it fails to connect, it will throw an exception.
 
 <?php
 
+use OP\EBSWebservice;
+
 class LocationsPage extends Page {
 	
 }
