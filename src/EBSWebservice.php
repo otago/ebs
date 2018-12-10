@@ -130,7 +130,7 @@ class EBSWebservice {
 
 		// allow self signed certs in dev mode
 		if (Director::isDev() || Director::isTest()) {
-			curl_setopt($session, CURLOPT_SSL_VERIFYHOST, '1');
+			curl_setopt($session, CURLOPT_SSL_VERIFYHOST, '2');
 			curl_setopt($session, CURLOPT_SSL_VERIFYPEER, '0');
 		}
 		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
