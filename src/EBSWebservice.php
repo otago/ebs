@@ -6,6 +6,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Core\Environment;
 
 /**
  * EBS webservice object used to interface with your Student Management System
@@ -135,6 +136,11 @@ class EBSWebservice {
 		}
 		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 5);
+
+        if(Environment::getEnv('SS_OUTBOUND_PROXY') && Environment::getEnv('SS_OUTBOUND_PROXY_PORT')) {
+            curl_setopt($session, CURLOPT_PROXY, Environment::getEnv('SS_OUTBOUND_PROXY'));
+            curl_setopt($session, CURLOPT_PROXYPORT, Environment::getEnv('SS_OUTBOUND_PROXY_PORT'));
+        }
 
 		if (!$isLongRequest) {
 			curl_setopt($session, CURLOPT_TIMEOUT, 60);
