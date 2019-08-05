@@ -40,6 +40,13 @@ OP\EBSWebservice:
         locationTest: https://ebs-test.organisation.domain/Rest/
         locationDev:  https://ebs-dev.organisation.domain/Rest/
         locationLive: https://ebs-live.organisation.domain/Rest/
+        
+OP\EBSCheckInstance:
+    testurl:
+        - https://ebs-test.organisation.domain/Rest/
+        - https://ebs-dev.organisation.domain/Rest/
+        - https://ebs-live.organisation.domain/Rest/
+    checkendpoint: Modules/15866/Screens/u_webservicescreen/Data/datalink
 ```
 
 Use a VPN or Firewall rules to secure data can only move between EBS and your web server. 

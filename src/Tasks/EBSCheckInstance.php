@@ -11,36 +11,31 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\View\ArrayData;
 
-class EBSCheckUrls extends BuildTask
+class EBSCheckInstance extends BuildTask
 {
-    protected $title = "EBSCheckUrls";
-    protected $description = 'EBSCheckUrls';
+    protected $title = "EBSCheckInstance";
+    protected $description = 'EBSCheckInstance';
     private static $token; // JSON authentication token
     private $bad = '<span style="color:red"> Not Working</span>';
-    private $good = '<span style="color:green"> Not Working</span>';
+    private $good = '<span style="color:green"> Working</span>';
 
 
     public function run($request)
     {
-
-        $bad = '<span style="color:red"> Not Working</span>';
-        $good = '<span style="color:green">Working</span> ';
-
-
-        foreach(EBSWebservice::config()->get('testurl') as $url)
+        foreach(self::config()->get('testurl') as $url)
         {
             echo "<strong>$url</strong><br>";
             $this->connect($url);
 
 
-            $room_list_request = $this->request($url . 'Modules/15866/Screens/u_studenthub/Data/getRooms?p_studentid=0');
+            $endpoint=self::config()->get('checkendpoint');
+            $room_list_request = $this->request($url . $endpoint);
 
             if ($room_list_request->Code() == 200) {
-                //debug::dump( $room_list_request->Data()->getRooms->Count() );
-                echo "u_studenthub/Data/getRooms: " . $this->good . "<br>";
+                echo "$endpoint: " . $this->good . "<br>";
             }else
             {
-                echo "u_studenthub/Data/getRooms: " . $this->bad . "<br>";
+                echo "$endpoint: " . $this->bad . "<br>";
             }
 
             echo "<br>";
