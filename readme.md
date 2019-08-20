@@ -42,10 +42,10 @@ OP\EBSWebservice:
         locationLive: https://ebs-live.organisation.domain/Rest/
         
 OP\EBSCheckInstance:
-    testurl:
-        - https://ebs-test.organisation.domain/Rest/
-        - https://ebs-dev.organisation.domain/Rest/
-        - https://ebs-live.organisation.domain/Rest/
+    prod: https://ebs-live.organisation.domain/Rest/
+    testingurl:
+        test: https://ebs-test.organisation.domain/Rest/
+        dev: https://ebs-dev.organisation.domain/Rest/
     checkendpoint: Modules/15866/Screens/u_webservicescreen/Data/datalink
 ```
 

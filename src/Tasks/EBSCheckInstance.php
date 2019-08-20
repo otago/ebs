@@ -2,6 +2,7 @@
 
 namespace OP;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Dev\Debug;
@@ -10,39 +11,60 @@ use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\View\ArrayData;
+use SilverStripe\EnvironmentCheck\EnvironmentCheck;
 
-class EBSCheckInstance extends BuildTask
+class EBSCheckInstance implements EnvironmentCheck
 {
     protected $title = "EBSCheckInstance";
     protected $description = 'EBSCheckInstance';
     private static $token; // JSON authentication token
-    private $bad = '<span style="color:red"> Not Working</span>';
-    private $good = '<span style="color:green"> Working</span>';
 
-
-    public function run($request)
+    public function __construct($url = '',$prod = true)
     {
-        foreach(self::config()->get('testurl') as $url)
-        {
-            echo "<strong>$url</strong><br>";
-            $this->connect($url);
-
-
-            $endpoint=self::config()->get('checkendpoint');
-            $room_list_request = $this->request($url . $endpoint);
-
-            if ($room_list_request->Code() == 200) {
-                echo "$endpoint: " . $this->good . "<br>";
-            }else
-            {
-                echo "$endpoint: " . $this->bad . "<br>";
-            }
-
-            echo "<br>";
-        }
+        $this->url = $url;
+        $this->prod = $prod;
     }
 
+    public function check()
+    {
+        if ($this->prod)
+        {
+            $errorType = EnvironmentCheck::ERROR;
+        } else {
+            $errorType = EnvironmentCheck::WARNING;
+        }
+        $retMessage = "";
+        $retCheck = EnvironmentCheck::OK;
 
+        $connect = $this->connect($this->url);
+        if($connect[0])
+        {
+            $retMessage.= "$connect[1]";
+        }else{
+            $retCheck = $errorType;
+            $retMessage.= "Auth: ".$connect[1];
+        }
+
+        $endpoint=Config::inst()->get(EBSCheckInstance::class, 'checkendpoint');
+        $room_list_request = $this->request($this->url . $endpoint);
+
+        if ($room_list_request->Code() == 200) {
+            $retMessage.= "\n Able to access - endpoint";
+        }else
+        {
+            $retCheck = $errorType;
+            $retMessage.= "\n Could not access endpoint - $endpoint";
+        }
+
+        //if not ok, add url to message
+        if ($retCheck >1)
+        {
+            $retMessage.= "\n URL: " . $this->url;
+        }
+
+        return [$retCheck,$retMessage];
+
+    }
 
     public function connect($url) {
 
@@ -71,15 +93,14 @@ class EBSCheckInstance extends BuildTask
                 if (isset($_REQUEST['debug']) && (Director::isDev() || Director::isTest())) {
                     Debug::dump($this::$token);
                 }
-                echo "Authentication: " . $this->good . "<br>";
-                return $this::$token;
+                return [true,"Authentication: Worked: ".substr($this::$token, 0, 10) ];
             } else {
-                echo 'Failed to connect to EBS: invalid credentials ' . $this->bad . "<br>";
+               return [false,"Failed to connect to EBS: invalid credentials"];
             }
         } else {
-            echo 'Failed to connect to EBS: ' . $result->Code() . ' ' . $this->bad . "<br>";
+            return [false,'Failed to connect to EBS: ' . $result->Code()];
         }
-        //var_dump($errors);
+
         return null;
     }
 
