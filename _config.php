@@ -11,6 +11,5 @@ EnvironmentCheckSuite::register("check", "OP\EBSCheckInstance('$prod')", "EBS - 
 
 foreach($testingurl as $key => $url)
 {
-
     EnvironmentCheckSuite::register("check", "OP\EBSCheckInstance('$url',false)", "EBS - $key");
 }

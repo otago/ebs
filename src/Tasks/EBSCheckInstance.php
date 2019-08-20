@@ -67,7 +67,6 @@ class EBSCheckInstance implements EnvironmentCheck
     }
 
     public function connect($url) {
-
         $authentication = EBSWebservice::config()->get('authentication');
         if (!isset($authentication['username']) || !isset($authentication['password'])) {
             user_error('EBS EBSWebservice authentication not set in .yml file');
@@ -79,7 +78,6 @@ class EBSCheckInstance implements EnvironmentCheck
         if (isset($_REQUEST['debug']) && (Director::isDev() || Director::isTest())) {
             Debug::dump($this::$token);
         }
-
 
         $result = $this->request($url."Authentication");
 
@@ -190,5 +188,4 @@ class EBSCheckInstance implements EnvironmentCheck
 
         return new EBSResponse($content, $code, $url);
     }
-
 }
