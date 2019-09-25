@@ -27,14 +27,17 @@ class EBSCheckInstance implements EnvironmentCheck
 
     public function check()
     {
+        $retMessage = "";
+        $retCheck = EnvironmentCheck::OK;
+
         if ($this->prod)
         {
             $errorType = EnvironmentCheck::ERROR;
         } else {
             $errorType = EnvironmentCheck::WARNING;
+            $retMessage = "SSL cert ignored. \n";
         }
-        $retMessage = "";
-        $retCheck = EnvironmentCheck::OK;
+
 
         $connect = $this->connect($this->url);
         if($connect[0])
@@ -116,17 +119,23 @@ class EBSCheckInstance implements EnvironmentCheck
             Debug::dump($url);
         }
 
-        // allow self signed certs in dev mode
-        if (Director::isDev() || Director::isTest()) {
+        // allow self signed certs in dev mode or when checking non prod
+        if (Director::isDev() || Director::isTest() || !$this->prod) {
             curl_setopt($session, CURLOPT_SSL_VERIFYHOST, '2');
             curl_setopt($session, CURLOPT_SSL_VERIFYPEER, '0');
         }
+
+
         curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 5);
 
         if(Environment::getEnv('SS_OUTBOUND_PROXY') && Environment::getEnv('SS_OUTBOUND_PROXY_PORT')) {
             curl_setopt($session, CURLOPT_PROXY, Environment::getEnv('SS_OUTBOUND_PROXY'));
             curl_setopt($session, CURLOPT_PROXYPORT, Environment::getEnv('SS_OUTBOUND_PROXY_PORT'));
+        }
+
+        if ($this->prod) {
+
         }
 
         if (!$isLongRequest) {
