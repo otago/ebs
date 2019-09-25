@@ -124,7 +124,7 @@ class EBSCheckInstance implements EnvironmentCheck
         }
 
         // allow self signed certs in dev mode
-        if ($this->ignoreCert ) {
+        if ($this->ignoreCert || Director::isDev() || Director::isTest()) {
             curl_setopt($session, CURLOPT_SSL_VERIFYHOST, '2');
             curl_setopt($session, CURLOPT_SSL_VERIFYPEER, '0');
         }
