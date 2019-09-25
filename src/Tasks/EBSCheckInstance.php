@@ -128,8 +128,7 @@ class EBSCheckInstance implements EnvironmentCheck
             curl_setopt($session, CURLOPT_SSL_VERIFYHOST, '2');
             curl_setopt($session, CURLOPT_SSL_VERIFYPEER, '0');
         }
-
-
+        
         curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 5);
 
