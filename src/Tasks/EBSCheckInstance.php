@@ -19,10 +19,11 @@ class EBSCheckInstance implements EnvironmentCheck
     protected $description = 'EBSCheckInstance';
     private static $token; // JSON authentication token
 
-    public function __construct($url = '',$prod = true)
+    public function __construct($url = '',$prod = true, $ignoreCert = false)
     {
         $this->url = $url;
         $this->prod = $prod;
+        $this->ignoreCert = $ignoreCert;
     }
 
     public function check()
@@ -119,8 +120,8 @@ class EBSCheckInstance implements EnvironmentCheck
             Debug::dump($url);
         }
 
-        // allow self signed certs in dev mode or when checking non prod
-        if (Director::isDev() || Director::isTest() || !$this->prod) {
+        // allow self signed certs in dev mode
+        if ($this->ignoreCert ) {
             curl_setopt($session, CURLOPT_SSL_VERIFYHOST, '2');
             curl_setopt($session, CURLOPT_SSL_VERIFYPEER, '0');
         }
