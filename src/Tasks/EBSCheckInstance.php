@@ -138,10 +138,6 @@ class EBSCheckInstance implements EnvironmentCheck
             curl_setopt($session, CURLOPT_PROXYPORT, Environment::getEnv('SS_OUTBOUND_PROXY_PORT'));
         }
 
-        if ($this->prod) {
-
-        }
-
         if (!$isLongRequest) {
             curl_setopt($session, CURLOPT_TIMEOUT, 60);
         } else {
