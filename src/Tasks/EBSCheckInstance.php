@@ -36,7 +36,10 @@ class EBSCheckInstance implements EnvironmentCheck
             $errorType = EnvironmentCheck::ERROR;
         } else {
             $errorType = EnvironmentCheck::WARNING;
-            $retMessage = "SSL cert ignored. \n";
+        }
+
+        if ($this->ignoreCert ) {
+            $retMessage .= "SSL cert ignored. \n";
         }
 
 
