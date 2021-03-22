@@ -2,6 +2,7 @@
 
 namespace OP;
 
+use Exception;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
@@ -32,15 +33,14 @@ class EBSWebservice {
 			return EBSWebservice::$instance;
 		}
 
-		$authentication = self::config()->get('authentication');
-		if (!isset($authentication['username']) || !isset($authentication['password'])) {
-			user_error('EBS EBSWebservice authentication not set in .yml file');
+		if (!Environment::getEnv('EBSUSERNAME') || !Environment::getEnv('EBSPASSWORD')) {
+			user_error('EBS EBSWebservice authentication not set in .env file');
 		}
 
 		// get a cache key made in the last 30 minutes
 		$ebscache = EBSWebserviceCache::get()
 				->filter(array(
-			'Name' => $authentication['username'],
+			'Name' => Environment::getEnv('EBSUSERNAME'),
 			'Created:GreaterThan' => strtotime('-30 minutes')
 		));
 
@@ -53,7 +53,7 @@ class EBSWebservice {
 			return EBSWebservice::$instance;
 		}
 
-		$auth = base64_encode($authentication['username'] . ":" . $authentication['password']);
+		$auth = base64_encode(Environment::getEnv('EBSUSERNAME') . ":" . Environment::getEnv('EBSPASSWORD'));
 		EBSWebservice::$token = "Authorization: Basic $auth";
 
 		if (isset($_REQUEST['debug']) && (Director::isDev() || Director::isTest())) {
@@ -77,7 +77,7 @@ class EBSWebservice {
 				}
 				$cache = EBSWebserviceCache::create();
 				$cache->Token = EBSWebservice::$token;
-				$cache->Name = $authentication['username'];
+				$cache->Name = Environment::getEnv('EBSUSERNAME');
 				$cache->write();
 				return EBSWebservice::$instance;
 			} else {
@@ -105,15 +105,7 @@ class EBSWebservice {
 	 * @return type string
 	 */
 	public static function getURL() {
-		$urltype = self::config()->get('authentication');
-		if (Director::isTest()) {
-			return $urltype['locationTest'];
-		} else if (Director::isDev()) {
-			return $urltype['locationDev'];
-		} else if (Director::isLive()) {
-			return $urltype['locationLive'];
-		}
-		return '';
+		return Environment::getEnv('EBSLOCATION');
 	}
 
 	/**
@@ -137,10 +129,10 @@ class EBSWebservice {
 		curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 5);
 
-        if(Environment::getEnv('SS_OUTBOUND_PROXY') && Environment::getEnv('SS_OUTBOUND_PROXY_PORT')) {
-            curl_setopt($session, CURLOPT_PROXY, Environment::getEnv('SS_OUTBOUND_PROXY'));
-            curl_setopt($session, CURLOPT_PROXYPORT, Environment::getEnv('SS_OUTBOUND_PROXY_PORT'));
-        }
+		if (Environment::getEnv('SS_OUTBOUND_PROXY') && Environment::getEnv('SS_OUTBOUND_PROXY_PORT')) {
+			curl_setopt($session, CURLOPT_PROXY, Environment::getEnv('SS_OUTBOUND_PROXY'));
+			curl_setopt($session, CURLOPT_PROXYPORT, Environment::getEnv('SS_OUTBOUND_PROXY_PORT'));
+		}
 
 		if (!$isLongRequest) {
 			curl_setopt($session, CURLOPT_TIMEOUT, 60);
