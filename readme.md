@@ -33,20 +33,20 @@ After create a **app/_config/ebs.yml** file with your EBS web service user detai
 ---
 Name: EBSWebservice
 ---
-OP\EBSWebservice:
-    authentication:
-        username: webservicename
-        password: webservicepassword
-        locationTest: https://ebs-test.organisation.domain/Rest/
-        locationDev:  https://ebs-dev.organisation.domain/Rest/
-        locationLive: https://ebs-live.organisation.domain/Rest/
-        
+
 OP\EBSCheckInstance:
     prod: https://ebs-live.organisation.domain/Rest/
     testingurl:
         test: https://ebs-test.organisation.domain/Rest/
         dev: https://ebs-dev.organisation.domain/Rest/
     checkendpoint: Modules/15866/Screens/u_webservicescreen/Data/datalink
+```
+
+.env
+```
+EBSUSERNAME="myebsusername"
+EBSPASSWORD="mypassword"
+EBSLOCATION="https://ebsOneWebServices-dev.myorganisation.org/Rest/"
 ```
 
 Use a VPN or Firewall rules to secure data can only move between EBS and your web server. 
