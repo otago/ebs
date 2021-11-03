@@ -1,0 +1,7 @@
+---
+Name: opebssiteconfig
+---
+
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - OP\OPEBSSiteConfig
