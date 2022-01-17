@@ -75,11 +75,11 @@ class EBSCheckInstance implements EnvironmentCheck
 
     public function connect($url) {
         $authentication = EBSWebservice::config()->get('authentication');
-        if (!isset($authentication['username']) || !isset($authentication['password'])) {
-            user_error('EBS EBSWebservice authentication not set in .yml file');
+        if (!Environment::getEnv('EBSUSERNAME') || !Environment::getEnv('EBSPASSWORD')) {
+            user_error('EBS EBSWebservice authentication not set in .env file');
         }
 
-        $auth = base64_encode($authentication['username'] . ":" . $authentication['password']);
+        $auth = base64_encode(Environment::getEnv('EBSUSERNAME') . ":" . Environment::getEnv('EBSPASSWORD'));
         $this::$token = "Authorization: Basic $auth";
 
         if (isset($_REQUEST['debug']) && (Director::isDev() || Director::isTest())) {
@@ -100,7 +100,7 @@ class EBSCheckInstance implements EnvironmentCheck
                 }
                 return [true,"Authentication: Worked: ".substr($this::$token, 0, 10) ];
             } else {
-               return [false,"Failed to connect to EBS: invalid credentials"];
+                return [false,"Failed to connect to EBS: invalid credentials"];
             }
         } else {
             return [false,'Failed to connect to EBS: ' . $result->Code()];
@@ -128,7 +128,7 @@ class EBSCheckInstance implements EnvironmentCheck
             curl_setopt($session, CURLOPT_SSL_VERIFYHOST, '2');
             curl_setopt($session, CURLOPT_SSL_VERIFYPEER, '0');
         }
-        
+
         curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 5);
 
