@@ -26,7 +26,7 @@ class EBSWebservice
     /**
      * Connects to EBS. If it fails it will return a null object. You can see
      * errors by looking at EBSWebservice::getErrors()
-     * @return \EBSWebservice|null
+     * @return EBSWebservice|null
      */
 
     public static function connect()
@@ -121,7 +121,7 @@ class EBSWebservice
      * @param type $url the webservice to launch (string)
      * @param type $method GET, PUT, POST.
      * @param type $body POST or PUT data
-     * @return array with the parsed data
+     * @return EBSResponse with the parsed data
      */
     function request($url, $method = "GET", $body = "", $isLongRequest = false)
     {
