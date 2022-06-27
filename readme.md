@@ -68,4 +68,12 @@ See docs/ folder
  3. [Creating an application](/docs/3_application.md) - with a dynamic search
 
 
+# EBS API documentation
+
+you can view the living document here:
+
+https://docs.ebs.tribalgroup.com/wsdocs/
+
+
+
 
