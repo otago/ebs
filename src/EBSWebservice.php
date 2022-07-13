@@ -98,6 +98,17 @@ class EBSWebservice
         return null;
     }
 
+
+    /**
+     * returns the connection token
+     * @return string
+     */
+
+    public static function getToken()
+    {
+        return static::$token;
+    }
+
     /**
      * returns an array of errors
      * @return array of errors
