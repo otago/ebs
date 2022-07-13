@@ -103,7 +103,6 @@ class EBSWebservice
      * returns the connection token
      * @return string
      */
-
     public static function getToken()
     {
         return static::$token;
