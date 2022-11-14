@@ -3,6 +3,7 @@
 namespace OP;
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 
 /**
  * Every X minutes the token gets regenerated. Speeds up consecutive requests.
