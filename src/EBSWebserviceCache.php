@@ -15,4 +15,16 @@ class EBSWebserviceCache extends DataObject
         'Name' => 'Text',
         'Token' => 'Text'
     ];
+    
+    /**
+     * Deletes all EBSWebserviceCache tokens on dev build
+     * @return void
+     */
+    public function requireDefaultRecords()
+    {
+        foreach (EBSWebserviceCache::get() as $EBSCache) {
+            DB::alteration_message("Deleted Current token: " . $EBSCache->Name, "deleted");
+            $EBSCache->delete();
+        }
+    }
 }
