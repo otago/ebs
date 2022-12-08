@@ -9,7 +9,9 @@ $prod = Config::inst()->get(EBSCheckInstance::class, 'prod');
 
 EnvironmentCheckSuite::register("check", "OP\EBSCheckInstance('$prod')", "EBS - Prod-Live");
 
-foreach($testingurl as $key => $url)
-{
-    EnvironmentCheckSuite::register("check", "OP\EBSCheckInstance('$url',false,true)", "EBS - $key");
+if ($testingurl) {
+    foreach($testingurl as $key => $url)
+    {
+        EnvironmentCheckSuite::register("check", "OP\EBSCheckInstance('$url',false,true)", "EBS - $key");
+    }
 }
