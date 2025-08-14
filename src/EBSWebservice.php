@@ -183,7 +183,9 @@ class EBSWebservice
                     curl_setopt($session, CURLOPT_CUSTOMREQUEST, "PUT");
                 }
                 break;
-
+            case "DELETE":
+                curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                break;
             case "GET":
                 curl_setopt($session, CURLOPT_HTTPGET, true);
         }
