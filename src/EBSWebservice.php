@@ -21,7 +21,6 @@ class EBSWebservice
     private static $instance;   // static ebs connection instance
     private static $token; // JSON authentication token
     private static $errors = []; // connection errors
-    private static $jsonPutFix = false; // some PHP environments you may need to use this cURL PUT
 
     /**
      * Connects to EBS. If it fails it will return a null object. You can see
@@ -163,25 +162,8 @@ class EBSWebservice
             case "POST";
                 curl_setopt($session, CURLOPT_POST, true);
                 break;
-
             case "PUT":
-                if (EBSWebservice::$jsonPutFix) {
-                    curl_setopt($session, CURLOPT_PUT, true);
-                    // use a max of 256KB of RAM before going to disk
-                    $fp = fopen('php://temp/maxmemory:256000', 'w');
-                    if (!$fp) {
-                        throw new Exception('could not open temp memory data');
-                    }
-                    fwrite($fp, $body);
-                    fseek($fp, 0);
-
-                    curl_setopt($session, CURLOPT_BINARYTRANSFER, true);
-                    curl_setopt($session, CURLOPT_INFILE, $fp); // file pointer
-                    curl_setopt($session, CURLOPT_INFILESIZE, strlen($body));
-                } else {
-                    // this works in older versions of PHP
-                    curl_setopt($session, CURLOPT_CUSTOMREQUEST, "PUT");
-                }
+                curl_setopt($session, CURLOPT_CUSTOMREQUEST, "PUT");
                 break;
             case "DELETE":
                 curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'DELETE');
@@ -209,8 +191,6 @@ class EBSWebservice
             Debug::dump(curl_error($session));
             Debug::dump(curl_errno($session));
         }
-
-        curl_close($session);
 
         return new EBSResponse($content, $code, $url);
     }
