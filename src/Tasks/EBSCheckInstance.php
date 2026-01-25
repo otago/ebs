@@ -2,15 +2,16 @@
 
 namespace OP;
 
+use Exception;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Dev\Debug;
-use SilverStripe\ORM\GroupedList;
+use SilverStripe\Model\List\GroupedList;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\EnvironmentCheck\EnvironmentCheck;
 
 class EBSCheckInstance implements EnvironmentCheck
@@ -19,7 +20,11 @@ class EBSCheckInstance implements EnvironmentCheck
     protected $description = 'EBSCheckInstance';
     private static $token; // JSON authentication token
 
-    public function __construct($url = '',$prod = true, $ignoreCert = false)
+    protected $url;
+    protected $prod;
+    protected $ignoreCert;
+
+    public function __construct($url = '', $prod = true, $ignoreCert = false)
     {
         $this->url = $url;
         $this->prod = $prod;
@@ -31,50 +36,45 @@ class EBSCheckInstance implements EnvironmentCheck
         $retMessage = "";
         $retCheck = EnvironmentCheck::OK;
 
-        if ($this->prod)
-        {
+        if ($this->prod) {
             $errorType = EnvironmentCheck::ERROR;
         } else {
             $errorType = EnvironmentCheck::WARNING;
         }
 
-        if ($this->ignoreCert ) {
+        if ($this->ignoreCert) {
             $retMessage .= "SSL cert ignored. \n";
         }
 
 
         $connect = $this->connect($this->url);
-        if($connect[0])
-        {
-            $retMessage.= "$connect[1]";
-        }else{
+        if ($connect[0]) {
+            $retMessage .= "$connect[1]";
+        } else {
             $retCheck = $errorType;
-            $retMessage.= "Auth: ".$connect[1];
+            $retMessage .= "Auth: " . $connect[1];
         }
 
-        $endpoint=Config::inst()->get(EBSCheckInstance::class, 'checkendpoint');
+        $endpoint = Config::inst()->get(EBSCheckInstance::class, 'checkendpoint');
         $room_list_request = $this->request($this->url . $endpoint);
 
         if ($room_list_request->Code() == 200) {
-            $retMessage.= "\n Able to access - endpoint";
-        }else
-        {
+            $retMessage .= "\n Able to access - endpoint";
+        } else {
             $retCheck = $errorType;
-            $retMessage.= "\n Could not access endpoint - $endpoint";
+            $retMessage .= "\n Could not access endpoint - $endpoint";
         }
 
         //if not ok, add url to message
-        if ($retCheck >1)
-        {
-            $retMessage.= "\n URL: " . $this->url;
+        if ($retCheck > 1) {
+            $retMessage .= "\n URL: " . $this->url;
         }
 
-        return [$retCheck,$retMessage];
-
+        return [$retCheck, $retMessage];
     }
 
-    public function connect($url) {
-        $authentication = EBSWebservice::config()->get('authentication');
+    public function connect($url)
+    {
         if (!Environment::getEnv('EBSUSERNAME') || !Environment::getEnv('EBSPASSWORD')) {
             user_error('EBS EBSWebservice authentication not set in .env file');
         }
@@ -86,7 +86,7 @@ class EBSCheckInstance implements EnvironmentCheck
             Debug::dump($this::$token);
         }
 
-        $result = $this->request($url."Authentication");
+        $result = $this->request($url . "Authentication");
 
         if ($result->Code() == 200) {
 
@@ -98,12 +98,12 @@ class EBSCheckInstance implements EnvironmentCheck
                 if (isset($_REQUEST['debug']) && (Director::isDev() || Director::isTest())) {
                     Debug::dump($this::$token);
                 }
-                return [true,"Authentication: Worked: ".substr($this::$token, 0, 10) ];
+                return [true, "Authentication: Worked: " . substr($this::$token, 0, 10)];
             } else {
-                return [false,"Failed to connect to EBS: invalid credentials"];
+                return [false, "Failed to connect to EBS: invalid credentials"];
             }
         } else {
-            return [false,'Failed to connect to EBS: ' . $result->Code()];
+            return [false, 'Failed to connect to EBS: ' . $result->Code()];
         }
 
         return null;
@@ -112,12 +112,13 @@ class EBSCheckInstance implements EnvironmentCheck
 
     /**
      * requests data from EBS
-     * @param type $url the webservice to launch (string)
-     * @param type $method GET, PUT, POST.
-     * @param type $body POST or PUT data
-     * @return array with the parsed data
+     * @param string  $url the webservice to launch (string)
+     * @param string  $method GET, PUT, POST.
+     * @param boolean $body POST or PUT data
+     * @return EBSResponse with the parsed data
      */
-    public function request($url, $method = "GET", $body = "", $isLongRequest = false) {
+    public function request($url, $method = "GET", $body = "", $isLongRequest = false)
+    {
         $session = curl_init($url);
         if (isset($_REQUEST['debug']) && (Director::isDev() || Director::isTest())) {
             Debug::dump($url);
@@ -132,7 +133,7 @@ class EBSCheckInstance implements EnvironmentCheck
         curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 5);
 
-        if(Environment::getEnv('SS_OUTBOUND_PROXY') && Environment::getEnv('SS_OUTBOUND_PROXY_PORT')) {
+        if (Environment::getEnv('SS_OUTBOUND_PROXY') && Environment::getEnv('SS_OUTBOUND_PROXY_PORT')) {
             curl_setopt($session, CURLOPT_PROXY, Environment::getEnv('SS_OUTBOUND_PROXY'));
             curl_setopt($session, CURLOPT_PROXYPORT, Environment::getEnv('SS_OUTBOUND_PROXY_PORT'));
         }
@@ -149,23 +150,7 @@ class EBSCheckInstance implements EnvironmentCheck
                 break;
 
             case "PUT":
-                if (EBSWebservice::$jsonPutFix) {
-                    curl_setopt($session, CURLOPT_PUT, true);
-                    // use a max of 256KB of RAM before going to disk
-                    $fp = fopen('php://temp/maxmemory:256000', 'w');
-                    if (!$fp) {
-                        throw new Exception('could not open temp memory data');
-                    }
-                    fwrite($fp, $body);
-                    fseek($fp, 0);
-
-                    curl_setopt($session, CURLOPT_BINARYTRANSFER, true);
-                    curl_setopt($session, CURLOPT_INFILE, $fp); // file pointer
-                    curl_setopt($session, CURLOPT_INFILESIZE, strlen($body));
-                } else {
-                    // this works in older versions of PHP
-                    curl_setopt($session, CURLOPT_CUSTOMREQUEST, "PUT");
-                }
+                curl_setopt($session, CURLOPT_CUSTOMREQUEST, "PUT");
                 break;
 
             case "GET":
@@ -191,8 +176,6 @@ class EBSCheckInstance implements EnvironmentCheck
             Debug::dump(curl_error($session));
             Debug::dump(curl_errno($session));
         }
-
-        curl_close($session);
 
         return new EBSResponse($content, $code, $url);
     }
