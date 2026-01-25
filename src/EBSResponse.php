@@ -3,7 +3,7 @@
 namespace OP;
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Dev\Debug;
 
 /**
