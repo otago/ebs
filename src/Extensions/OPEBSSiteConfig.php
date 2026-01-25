@@ -7,6 +7,7 @@
 
 namespace OP;
 
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
@@ -14,9 +15,8 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\TextareaField;
-use SilverStripe\ORM\DataExtension;
 
-class OPEBSSiteConfig extends DataExtension
+class OPEBSSiteConfig extends Extension
 {
     private static $db = [
         'DisableEBSConnectivity' => "Boolean",
@@ -31,7 +31,7 @@ class OPEBSSiteConfig extends DataExtension
     {
         $fields->addFieldToTab(
             'Root.Main',
-            CheckboxField::create('DisableEBSConnectivity', 'Diable Connection to EBS')
+            CheckboxField::create('DisableEBSConnectivity', 'Disable Connection to EBS')
                 ->setDescription('Disable the ability to connect to EBS, for use in the case of upgrades or maintenance')
         );
     }
